@@ -1,19 +1,18 @@
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.map(String::toInt)
-            .zipWithNext()
-            .count {
-                it.first < it.second
-            }
+
+    fun Input.sumUp(windowSize: Int) = toInts()
+        .windowed(windowSize)
+        .zipWithNext()
+        .count {
+            it.first.sum() < it.second.sum()
+        }
+
+    fun part1(input: Input): Int {
+        return input.sumUp(1)
     }
 
-    fun part2(input: List<String>): Int {
-        return input.map(String::toInt)
-            .windowed(3)
-            .zipWithNext()
-            .count {
-                it.first.sum() < it.second.sum()
-            }
+    fun part2(input: Input): Int {
+        return input.sumUp(3)
             
     }
 
