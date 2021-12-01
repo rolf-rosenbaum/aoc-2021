@@ -1,14 +1,17 @@
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.map { it.toInt() }
-            .zipWithNext().count {
+        return input.map(String::toInt)
+            .zipWithNext()
+            .count {
                 it.first < it.second
             }
     }
 
     fun part2(input: List<String>): Int {
-        return input.map { it.toInt() }
-            .windowed(3).zipWithNext().count {
+        return input.map(String::toInt)
+            .windowed(3)
+            .zipWithNext()
+            .count {
                 it.first.sum() < it.second.sum()
             }
             
