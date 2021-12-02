@@ -1,35 +1,18 @@
 fun main() {
+
     fun part1(input: List<String>): Int {
         val pos = input.map {
             it.toMove()
-        }.fold(Position(0, 0, 0)) { pos: Position, move ->
-            when(move.direction) {
-                Direction.UP -> Position(pos.fw, pos.depth - move.steps, pos.aim)
-                Direction.DOWN -> Position(pos.fw, pos.depth + move.steps, pos.aim)
-                Direction.FORWARD -> Position(pos.fw + move.steps, pos.depth, pos.aim)
-            }
-            
-        }
-        println(pos)
+        }.fold(Position(0, 0, 0)) { pos: Position, move -> move.execute(pos) }
         return pos.fw * pos.depth
-
     }
 
     fun part2(input: List<String>): Int {
         val pos = input.map {
             it.toMove()
-        }.fold(Position(0, 0, 0)) { pos: Position, move ->
-            when(move.direction) {
-                Direction.UP -> Position(pos.fw, pos.depth, pos.aim - move.steps)
-                Direction.DOWN -> Position(pos.fw, pos.depth, pos.aim + move.steps)
-                Direction.FORWARD -> Position(pos.fw + move.steps, pos.depth + (pos.aim * move.steps), pos.aim)
-            }
-
-        }
-        println(pos)
+        }.fold(Position(0, 0, 0)) { pos: Position, move -> move.executeSophisticated(pos) }
         return pos.fw * pos.depth
     }
-
 
 // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day02_test")
@@ -46,11 +29,20 @@ fun String.toMove(): Move {
     return Move(direction = Direction.fromString(tmp.first()), steps = tmp[1].toInt())
 }
 
+data class Move(val direction: Direction, val steps: Int) {
+    fun execute(pos: Position) = when (direction) {
+        Direction.UP -> Position(pos.fw, pos.depth - steps, pos.aim)
+        Direction.DOWN -> Position(pos.fw, pos.depth + steps, pos.aim)
+        Direction.FORWARD -> Position(pos.fw + steps, pos.depth, pos.aim)
+    }
 
-data class Move(
-    val direction: Direction,
-    val steps: Int
-)
+    fun executeSophisticated(pos: Position) = when (direction) {
+        Direction.UP -> Position(pos.fw, pos.depth, pos.aim - steps)
+        Direction.DOWN -> Position(pos.fw, pos.depth, pos.aim + steps)
+        Direction.FORWARD -> Position(pos.fw + steps, pos.depth + (pos.aim * steps), pos.aim)
+    }
+
+}
 
 data class Position(val fw: Int, val depth: Int, val aim: Int)
 
@@ -65,6 +57,4 @@ enum class Direction() {
             else -> throw IllegalArgumentException("invalid direction: $s")
         }
     }
-    
-    
 }
