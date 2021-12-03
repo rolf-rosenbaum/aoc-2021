@@ -3,8 +3,8 @@ fun main() {
 
         val cols: MutableMap<Int, MutableList<Char>> = input.toColumnMap()
 
-        val gammaRate = cols.searchFor(::mostCommon).joinToString("").toInt(2)
-        val epsilonRate = cols.searchFor(::leastCommon).joinToString("").toInt(2)
+        val gammaRate = cols.find(::mostCommon).joinToString("").toInt(2)
+        val epsilonRate = cols.find(::leastCommon).joinToString("").toInt(2)
 
         return gammaRate * epsilonRate
     }
@@ -39,7 +39,7 @@ fun oxygenGeneratorRate(input: Input, index: Int): String {
     if (input.size == 1)
         return input.first()
 
-    val mostCommon = input.toColumnMap().searchFor(::mostCommon)[index]
+    val mostCommon = input.toColumnMap().find(::mostCommon)[index]
 
     return oxygenGeneratorRate(
         input = input.filter { line -> line[index] == mostCommon },
@@ -50,7 +50,7 @@ fun oxygenGeneratorRate(input: Input, index: Int): String {
 fun co2ScrubberRate(input: Input, index: Int): String {
     if (input.size == 1)
         return input.first()
-    val leastCommon = input.toColumnMap().searchFor(::leastCommon)[index]
+    val leastCommon = input.toColumnMap().find(::leastCommon)[index]
 
     return co2ScrubberRate(
         input = input.filter { line ->
@@ -59,7 +59,7 @@ fun co2ScrubberRate(input: Input, index: Int): String {
     )
 }
 
-fun MutableMap<Int, MutableList<Char>>.searchFor(f: (Iterable<Char>) -> Char): List<Char> =
+fun MutableMap<Int, MutableList<Char>>.find(f: (Iterable<Char>) -> Char): List<Char> =
     map { (_, col) ->
         f(col)
     }
