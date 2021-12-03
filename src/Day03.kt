@@ -1,33 +1,16 @@
 fun main() {
-
-
     fun part1(input: Input): Int {
+
         val cols: MutableMap<Int, MutableList<Char>> = input.toColumnMap()
 
-        val gammaRate = cols.map { (_, col) ->
-            if (col.count { it == ZERO } > col.count { it == ONE }) {
-                '0'
-            } else {
-                '1'
-            }
-        }.joinToString("").toInt(2)
-        
-        val epsilonRate = cols.map { (_, col) ->
-            if (col.count { it == ZERO } < col.count { it == ONE }) {
-                '0'
-            } else {
-                '1'
-            }
-        }.joinToString("").toInt(2)
+        val gammaRate = cols.searchFor(::mostCommon).joinToString("").toInt(2)
+        val epsilonRate = cols.searchFor(::leastCommon).joinToString("").toInt(2)
 
         return gammaRate * epsilonRate
     }
 
-
     fun part2(input: Input): Int {
-        val cols: MutableMap<Int, MutableList<Char>> = input.toColumnMap()
-        
-        return oxygen(input, 0).toInt(2) * co2(input, 0).toInt(2)
+        return oxygenGeneratorRate(input, 0).toInt(2) * co2ScrubberRate(input, 0).toInt(2)
     }
 
 // test if implementation meets criteria from the description, like:
@@ -52,46 +35,48 @@ fun Input.toColumnMap(): MutableMap<Int, MutableList<Char>> {
     return cols
 }
 
-fun oxygen(input: Input, index: Int): String {
-    if (input.size == 1) 
+fun oxygenGeneratorRate(input: Input, index: Int): String {
+    if (input.size == 1)
         return input.first()
 
-    val cols: MutableMap<Int, MutableList<Char>> = input.toColumnMap()
+    val mostCommon = input.toColumnMap().searchFor(::mostCommon)[index]
 
-    val foo = cols.map { (_, col) ->
-        if (col.count { it == ZERO } > col.count { it == ONE }) {
-            '0'
-        } else {
-            '1'
-        }
-    }[index]
-
-    return oxygen(
-        input = input.filter { line ->
-            line[index] == foo
-        }, index = index +1)
+    return oxygenGeneratorRate(
+        input = input.filter { line -> line[index] == mostCommon },
+        index = index + 1
+    )
 }
 
-fun co2(input: Input, index: Int): String {
-    if (input.size == 1) 
+fun co2ScrubberRate(input: Input, index: Int): String {
+    if (input.size == 1)
         return input.first()
+    val leastCommon = input.toColumnMap().searchFor(::leastCommon)[index]
 
-    val cols: MutableMap<Int, MutableList<Char>> = input.toColumnMap()
-
-    val foo = cols.map { (_, col) ->
-        if (col.count { it == ZERO } <= col.count { it == ONE }) {
-            '0'
-        } else {
-            '1'
-        }
-    }[index]
-
-
-    return co2(
+    return co2ScrubberRate(
         input = input.filter { line ->
-            line[index] == foo
-        }, index = index +1)
+            line[index] == leastCommon
+        }, index = index + 1
+    )
 }
+
+fun MutableMap<Int, MutableList<Char>>.searchFor(f: (Iterable<Char>) -> Char): List<Char> =
+    map { (_, col) ->
+        f(col)
+    }
+
+fun mostCommon(col: Iterable<Char>) =
+    if (col.count { it == ZERO } > col.count { it == ONE }) {
+        '0'
+    } else {
+        '1'
+    }
+
+fun leastCommon(col: Iterable<Char>) =
+    if (col.count { it == ZERO } <= col.count { it == ONE }) {
+        '0'
+    } else {
+        '1'
+    }
 
 const val ZERO = '0'
 const val ONE = '1'
