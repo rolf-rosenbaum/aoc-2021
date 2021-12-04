@@ -1,5 +1,3 @@
-import java.awt.Point
-
 typealias Board = List<BingoNumber>
 
 fun main() {
@@ -18,11 +16,10 @@ fun main() {
             it.toInt()
         }
         numbers.forEach { drawn ->
-            boards = boards.map { board ->
-                board.map { if (it.num == drawn) it.copy(marked = true) else it }
-            }
-            val winnerBoard = boards.firstOrNull {it.isWinning()} 
-            if ( winnerBoard != null) {
+            boards = boards.flatten().map { if (it.num == drawn) it.copy(marked = true) else it }.chunked(25)
+
+            val winnerBoard = boards.firstOrNull { it.isWinning() }
+            if (winnerBoard != null) {
                 return winnerBoard.filterNot { it.marked }.sumOf { it.num } * drawn
             }
         }
@@ -35,9 +32,8 @@ fun main() {
             it.toInt()
         }
         numbers.forEach { drawn ->
-            boards = boards.map { board ->
-                board.map { if (it.num == drawn) it.copy(marked = true) else it }
-            }.toMutableList()
+            boards = boards.flatten()
+                .map { if (it.num == drawn) it.copy(marked = true) else it }.chunked(25).toMutableList()
             boards.removeIf { it.isWinning() && boards.size > 1 }
             if (boards.size == 1 && boards.first().isWinning())
                 return boards.first().filterNot { it.marked }.sumOf { it.num } * drawn
@@ -64,7 +60,7 @@ fun Board.hasWinningRow(): Boolean = (1..5)
     }
 
 fun Board.hasWinningColumn(): Boolean = filter { it.marked }
-    .groupBy { it.position.x }.any {it.value.size == 5}
+    .groupBy { it.position.x }.any { it.value.size == 5 }
 
 class Point(val x: Int, val y: Int)
 
