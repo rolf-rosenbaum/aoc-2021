@@ -1,3 +1,7 @@
+package day5
+
+import Input
+import readInput
 import kotlin.math.max
 import kotlin.math.min
 

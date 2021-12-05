@@ -1,3 +1,8 @@
+package day4
+
+import Input
+import readInput
+
 typealias Board = List<BingoNumber>
 
 fun main() {

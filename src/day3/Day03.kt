@@ -1,3 +1,8 @@
+package day3
+
+import Input
+import readInput
+
 fun main() {
     fun part1(input: Input): Int {
 
