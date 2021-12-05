@@ -4,11 +4,11 @@ import kotlin.math.min
 data class Coordinate(val x: Int, val y: Int)
 
 data class Line(val start: Coordinate, val end: Coordinate) {
-    fun isHorizontal() = start.y == end.y
-    fun isVertical() = start.x == end.x
-    fun isDiagonal() = isTopLeftToBottomRightDiagonal() || isTopRightToBottomLeftDiagonal()
-    fun isTopLeftToBottomRightDiagonal() = start.x - start.y == end.x - end.y
-    fun isTopRightToBottomLeftDiagonal() = start.x + start.y == end.x + end.y
+    val isHorizontal get() = start.y == end.y
+    val isVertical get() = start.x == end.x
+    val isDiagonal get() = isTopLeftToBottomRightDiagonal || isTopRightToBottomLeftDiagonal
+    val isTopLeftToBottomRightDiagonal get() = start.x - start.y == end.x - end.y
+    private val isTopRightToBottomLeftDiagonal get() = start.x + start.y == end.x + end.y
 }
 
 fun main() {
@@ -27,8 +27,8 @@ fun part1(input: Input): Int {
     val lines = readLines(input)
     val field = mutableMapOf<Coordinate, Int>()
     lines.map { line ->
-            field.markVerticalOrHorizontalLine(line)
-        }
+        field.markVerticalOrHorizontalLine(line)
+    }
     return field.count { it.value > 1 }
 }
 
@@ -36,19 +36,19 @@ fun part2(input: Input): Int {
     val lines = readLines(input)
     val field = mutableMapOf<Coordinate, Int>()
     lines.map { line ->
-            field.markVerticalOrHorizontalLine(line)
-            field.markDiagonalLine(line)
-        }
+        field.markVerticalOrHorizontalLine(line)
+        field.markDiagonalLine(line)
+    }
     return field.count { it.value > 1 }
 }
 
 private fun MutableMap<Coordinate, Int>.markDiagonalLine(line: Line) {
-    if (line.isDiagonal()) markDiagonal(line)
+    if (line.isDiagonal) markDiagonal(line)
 }
 
 private fun MutableMap<Coordinate, Int>.markVerticalOrHorizontalLine(line: Line) {
-    if (line.isHorizontal()) markHorizontal(line)
-    if (line.isVertical()) markVertical(line)
+    if (line.isHorizontal) markHorizontal(line)
+    if (line.isVertical) markVertical(line)
 }
 
 fun readLines(input: Input) = input.map { line ->
@@ -73,7 +73,7 @@ fun MutableMap<Coordinate, Int>.markVertical(line: Line) {
 fun MutableMap<Coordinate, Int>.markDiagonal(line: Line) {
     xRange(line).forEach { x ->
         yRange(line).forEach { y ->
-            if (line.isTopLeftToBottomRightDiagonal()) {
+            if (line.isTopLeftToBottomRightDiagonal) {
                 if (x - y == line.start.x - line.start.y) {
                     increaseCrossingCounter(x, y)
                 }
