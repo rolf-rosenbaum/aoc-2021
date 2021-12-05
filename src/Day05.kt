@@ -26,9 +26,8 @@ fun main() {
 fun part1(input: Input): Int {
     val lines = readLines(input)
     val field = mutableMapOf<Coordinate, Int>()
-    lines
-        .map { line ->
-            field.markVerticalAnHorizontalLines(line)
+    lines.map { line ->
+            field.markVerticalOrHorizontalLine(line)
         }
     return field.count { it.value > 1 }
 }
@@ -36,19 +35,18 @@ fun part1(input: Input): Int {
 fun part2(input: Input): Int {
     val lines = readLines(input)
     val field = mutableMapOf<Coordinate, Int>()
-    lines
-        .map { line ->
-            field.markVerticalAnHorizontalLines(line)
-            field.markDiagonalLines(line)
+    lines.map { line ->
+            field.markVerticalOrHorizontalLine(line)
+            field.markDiagonalLine(line)
         }
     return field.count { it.value > 1 }
 }
 
-private fun MutableMap<Coordinate, Int>.markDiagonalLines(line: Line) {
+private fun MutableMap<Coordinate, Int>.markDiagonalLine(line: Line) {
     if (line.isDiagonal()) markDiagonal(line)
 }
 
-private fun MutableMap<Coordinate, Int>.markVerticalAnHorizontalLines(line: Line) {
+private fun MutableMap<Coordinate, Int>.markVerticalOrHorizontalLine(line: Line) {
     if (line.isHorizontal()) markHorizontal(line)
     if (line.isVertical()) markVertical(line)
 }
@@ -61,30 +59,25 @@ fun readLines(input: Input) = input.map { line ->
 }
 
 fun MutableMap<Coordinate, Int>.markHorizontal(line: Line) {
-    (min(line.start.x, line.end.x)..max(line.start.x, line.end.x)).forEach { x ->
+    xRange(line).forEach { x ->
         increaseCrossingCounter(x, line.start.y)
     }
 }
 
 fun MutableMap<Coordinate, Int>.markVertical(line: Line) {
-    (min(line.start.y, line.end.y)..max(line.start.y, line.end.y)).forEach { y ->
+    yRange(line).forEach { y ->
         increaseCrossingCounter(line.start.x, y)
     }
 }
 
 fun MutableMap<Coordinate, Int>.markDiagonal(line: Line) {
-    if (line.isTopLeftToBottomRightDiagonal()) {
-        (min(line.start.x, line.end.x)..max(line.start.x, line.end.x)).forEach { x ->
-            (min(line.start.y, line.end.y)..max(line.start.y, line.end.y)).forEach { y ->
-                if (x - y == line.start.x - line.start.y)
+    xRange(line).forEach { x ->
+        yRange(line).forEach { y ->
+            if (line.isTopLeftToBottomRightDiagonal()) {
+                if (x - y == line.start.x - line.start.y) {
                     increaseCrossingCounter(x, y)
-            }
-        }
-    }
-
-    if (line.isTopRightToBottomLeftDiagonal()) {
-        (min(line.start.x, line.end.x)..max(line.start.x, line.end.x)).forEach { x ->
-            (min(line.start.y, line.end.y) .. max(line.start.y, line.end.y)).forEach { y ->
+                }
+            } else {
                 if (x + y == line.start.x + line.start.y)
                     increaseCrossingCounter(x, y)
             }
@@ -92,6 +85,10 @@ fun MutableMap<Coordinate, Int>.markDiagonal(line: Line) {
     }
 }
 
+private fun yRange(line: Line) = min(line.start.y, line.end.y)..max(line.start.y, line.end.y)
+
+private fun xRange(line: Line) = min(line.start.x, line.end.x)..max(line.start.x, line.end.x)
+
 private fun MutableMap<Coordinate, Int>.increaseCrossingCounter(x: Int, y: Int) {
-    ((this[Coordinate(x, y)] ?: 0) + 1).also { this[Coordinate(x, y)] = it }
+    (this[Coordinate(x, y)] ?: 0).also { count -> this[Coordinate(x, y)] = count + 1 }
 }
