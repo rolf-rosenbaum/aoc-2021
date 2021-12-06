@@ -8,17 +8,17 @@ import kotlin.math.min
 data class Coordinate(val x: Int, val y: Int)
 
 data class Line(val start: Coordinate, val end: Coordinate) {
-    val isHorizontal get() = start.y == end.y
-    val isVertical get() = start.x == end.x
-    val isDiagonal get() = isTopLeftToBottomRightDiagonal || isTopRightToBottomLeftDiagonal
-    val isTopLeftToBottomRightDiagonal get() = start.x - start.y == end.x - end.y
-    private val isTopRightToBottomLeftDiagonal get() = start.x + start.y == end.x + end.y
+    val isHorizontal = start.y == end.y
+    val isVertical = start.x == end.x
+    val isTopLeftToBottomRightDiagonal = start.x - start.y == end.x - end.y
+    private val isTopRightToBottomLeftDiagonal  = start.x + start.y == end.x + end.y
+    val isDiagonal  = isTopLeftToBottomRightDiagonal || isTopRightToBottomLeftDiagonal
 }
 
 fun main() {
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day05_test")
-    val input = readInput("Day05")
+    val testInput = readInput("day5/Day05_test")
+    val input = readInput("day5/Day05")
 
     check(part1(testInput) == 5)
     println(part1(input))

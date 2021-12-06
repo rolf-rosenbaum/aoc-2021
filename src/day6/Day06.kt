@@ -5,7 +5,6 @@ import readInput
 
 fun main() {
     fun part1(input: Input): Long {
-
         return input.first().split(",").map(String::toInt)
             .groupBy { it }
             .mapValues { it.value.count().toLong() }
