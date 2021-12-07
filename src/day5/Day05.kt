@@ -28,18 +28,16 @@ fun main() {
 }
 
 fun part1(input: Input): Int {
-    val lines = readLines(input)
     val field = mutableMapOf<Coordinate, Int>()
-    lines.map { line ->
+    readLines(input).map { line ->
         field.markVerticalOrHorizontalLine(line)
     }
     return field.count { it.value > 1 }
 }
 
 fun part2(input: Input): Int {
-    val lines = readLines(input)
     val field = mutableMapOf<Coordinate, Int>()
-    lines.map { line ->
+    readLines(input).map { line ->
         field.markVerticalOrHorizontalLine(line)
         field.markDiagonalLine(line)
     }
@@ -57,9 +55,10 @@ private fun MutableMap<Coordinate, Int>.markVerticalOrHorizontalLine(line: Line)
 
 fun readLines(input: Input) = input.map { line ->
     val coordinate = line.split(" -> ")
-    val start = Coordinate(coordinate.first().split(",").first().toInt(), coordinate.first().split(",").last().toInt())
-    val end = Coordinate(coordinate.last().split(",").first().toInt(), coordinate.last().split(",").last().toInt())
-    Line(start, end)
+    Line(
+        Coordinate(coordinate.first().split(",").first().toInt(), coordinate.first().split(",").last().toInt()),
+        Coordinate(coordinate.last().split(",").first().toInt(), coordinate.last().split(",").last().toInt())
+    )
 }
 
 fun MutableMap<Coordinate, Int>.markHorizontal(line: Line) {
