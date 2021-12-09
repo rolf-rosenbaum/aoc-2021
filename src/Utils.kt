@@ -16,4 +16,6 @@ fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest
 
 fun Input.toInts() = map(String::toInt)
 
-fun String.csvToInts() = split(",").map(String::toInt) 
+fun String.csvToInts() = split(",").map(String::toInt)
+
+data class Point(val x: Int, val y: Int)

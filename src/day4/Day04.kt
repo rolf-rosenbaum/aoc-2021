@@ -1,6 +1,7 @@
 package day4
 
 import Input
+import Point
 import readInput
 
 typealias Board = List<BingoNumber>
@@ -67,7 +68,7 @@ fun Board.hasWinningRow(): Boolean = (1..5)
 fun Board.hasWinningColumn(): Boolean = filter { it.marked }
     .groupBy { it.position.x }.any { it.value.size == 5 }
 
-class Point(val x: Int, val y: Int)
+
 
 data class BingoNumber(
     val num: Int,
