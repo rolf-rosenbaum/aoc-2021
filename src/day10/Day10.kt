@@ -7,11 +7,11 @@ fun main() {
 
     fun part1(input: Input): Int {
         return input
-            .sumOf { valueMap[it.findFirstIllegalCharacter()] ?: 0 }
+            .sumOf { errorScore[it.findFirstIllegalCharacter()] ?: 0 }
     }
 
     fun String.score() = fold(0L) { acc, c ->
-        acc * 5 + valueMapPart2[c]!!.toLong()
+        acc * 5 + completionScore[c]!!.toLong()
     }
 
     fun part2(input: Input): Long {
@@ -21,7 +21,7 @@ fun main() {
                 it.findClosingSequence()
             }.map(String::score).sorted()
 
-        return scores[(scores.size - 1) / 2]
+        return scores[scores.size / 2]
     }
 
     // test if implementation meets criteria from the description, like:
@@ -52,7 +52,7 @@ fun String.findClosingSequence(): String {
 fun String.findFirstIllegalCharacter(): Char? {
     val parsed = mutableListOf<Char>()
     forEach {
-        if (it in opening) {
+        if (it.isOpeningBracket()) {
             parsed.add(it)
         } else {
             if (parsed.last() == it.correspondingOpener()) {
@@ -67,9 +67,10 @@ fun String.findFirstIllegalCharacter(): Char? {
 
 fun Char.correspondingOpener() = opening[closing.indexOf(this)]
 fun Char.correspondingCloser() = closing[opening.indexOf(this)]
+fun Char.isOpeningBracket() = this in opening
 
-val valueMap = mapOf(')' to 3, ']' to 57, '}' to 1197, '>' to 25137)
-val valueMapPart2 = mapOf(')' to 1, ']' to 2, '}' to 3, '>' to 4)
+val errorScore = mapOf(')' to 3, ']' to 57, '}' to 1197, '>' to 25137)
+val completionScore = mapOf(')' to 1, ']' to 2, '}' to 3, '>' to 4)
 
 val opening = listOf('[', '<', '{', '(')
 val closing = listOf(']', '>', '}', ')')

@@ -1,4 +1,4 @@
-package day5
+package day05
 
 import Input
 import readInput
@@ -17,8 +17,8 @@ data class Line(val start: Coordinate, val end: Coordinate) {
 
 fun main() {
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("day5/Day05_test")
-    val input = readInput("day5/Day05")
+    val testInput = readInput("day05/Day05_test")
+    val input = readInput("day05/Day05")
 
     check(part1(testInput) == 5)
     println(part1(input))

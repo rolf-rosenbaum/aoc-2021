@@ -1,4 +1,4 @@
-package day7
+package day07
 
 import Input
 import csvToInts
@@ -34,8 +34,8 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("day7/test_input")
-    val input = readInput("day7/input")
+    val testInput = readInput("day07/test_input")
+    val input = readInput("day07/input")
 
     check(part1(testInput) == 37)
     println(part1(input))
