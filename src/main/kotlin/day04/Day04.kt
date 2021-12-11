@@ -48,8 +48,8 @@ fun main() {
     }
 
 // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day04_test")
-    val input = readInput("Day04")
+    val testInput = readInput("day04/Day04_test")
+    val input = readInput("day04/Day04")
 
     check(part1(testInput) == 4512)
     println(part1(input))
