@@ -23,12 +23,10 @@ fun main() {
         generateSequence(input.toOctopusField()) {
             step++
             it.step()
-        }.first {
-            it.all { octopus -> octopus.energy % 10 == 0 }
-        }
+        }.first { it.all { octopus -> octopus.energy % 10 == 0 } }
         return step
     }
-    
+
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("day11/test_input")
     val input = readInput("day11/input")
