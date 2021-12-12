@@ -16,11 +16,9 @@ fun main() {
     fun part2(input: Input): Int {
 
         val digitMap = input.map { line ->
-            line.split(" | ").let { it ->
-                it.first().split(" ").map { it1 ->
-                    it1.toCharArray().sorted().joinToString("")
-                }.determineDigits()
-            }
+            line.split(" | ").first().split(" ").map { it1 ->
+                it1.toCharArray().sorted().joinToString("")
+            }.determineDigits()
         }
         
         return input.mapIndexed { i, line ->

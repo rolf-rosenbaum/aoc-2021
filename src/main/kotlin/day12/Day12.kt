@@ -1,4 +1,4 @@
-package day11
+package day12
 
 import Input
 import Point
@@ -28,8 +28,8 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("day11/test_input")
-    val input = readInput("day11/input")
+    val testInput = readInput("day12/test_input")
+    val input = readInput("day12/input")
 
     check(part1(testInput) == 1656)
     println(part1(input))
@@ -40,7 +40,7 @@ fun main() {
 
 fun `Octopus's Garden`.step(): `Octopus's Garden` {
     val next = map { octopus ->
-        octopus.raiseEnergy()
+        octopus.beWarm()
     }.toMutableSet()
 
     var flashed: Boolean
@@ -63,7 +63,7 @@ fun `Octopus's Garden`.step(): `Octopus's Garden` {
 private fun `Octopus's Garden`.flashTheNeighbors(it: Octopus) {
     neighborsOf(it).forEach { neighbor ->
         remove(neighbor)
-        add(neighbor.raiseEnergy())
+        add(neighbor.beWarm())
     }
 }
 
@@ -103,7 +103,7 @@ data class Octopus(
 ) {
     val flashedThisTurn = energy == 10
 
-    fun raiseEnergy() =
+    fun beWarm() =
         if (flashedThisTurn) {
             this
         } else if (energy == 9) {
