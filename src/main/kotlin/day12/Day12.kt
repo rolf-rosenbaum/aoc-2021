@@ -3,84 +3,63 @@ package day12
 import Input
 import readInput
 
-typealias CaveMap = MutableMap<Cave, Array<Cave>>
+typealias CaveMap = Map<String, List<String>>
 
 fun main() {
-
-    fun part1(input: Input): Int {
-        val caveMap = input.toCaveMap()
-        caveMap.findAllPaths(Cave("start"), "", mutableSetOf())
-        return foundPaths.size
-    }
-
-    fun part2(input: Input): Int {
-        return 0
-    }
-
-    // test if implementation meets criteria from the description, like:
     val testInput = readInput("day12/test_input")
     val input = readInput("day12/input")
 
+    fun part1(input: Input): Int {
+        caves = input.toCaveMap()
+        return traverse(::allowedToVisit).size
+
+    }
+
+    fun part2(input: Input): Int {
+        return traverse(::allowedToVisitPart2).size
+    }
+
+    // test if implementation meets criteria from the description, like:
     check(part1(testInput) == 19)
     println(part1(input))
 
-    check(part2(testInput) == 0)
+    check(part2(testInput) == 103)
     println(part2(input))
 }
 
 val foundPaths = mutableSetOf<String>()
+var caves: CaveMap = mapOf()
 
-data class Cave(val id: String, val visited: Boolean = false) {
-    val isSmallCave = id.all { it.isLowerCase() }
-    val isStart = id == "start"
-    val isEnd = id == "end"
-    override fun equals(other: Any?): Boolean {
-        return other is Cave && other.id == id
+private fun allowedToVisit(cave: String, pathSoFar: List<String>) = cave.all { it.isUpperCase() } || cave !in pathSoFar
+
+private fun allowedToVisitPart2(cave: String, pathSoFar: List<String>) =
+    when {
+        cave.all { it.isUpperCase() } -> true
+        cave == "start" -> false
+        cave !in pathSoFar -> true
+        else -> pathSoFar
+            .filterNot { it.all { c -> c.isUpperCase() } }
+            .groupBy { it }
+            .none { it.value.size == 2 }
     }
 
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
-}
-
-fun CaveMap.findAllPaths(
-    currentCave: Cave,
-    currentPath: String,
-    visitedSmallCaves: MutableSet<Cave>
-): String {
-    if (currentCave.isSmallCave) {
-        visitedSmallCaves.add(currentCave)
-    }
-    if (currentCave.isStart) {
-        this[currentCave]!!
-            .forEach {
-                return findAllPaths(it, "start", visitedSmallCaves)
-            }
-    } else if (currentCave.isEnd) {
-        foundPaths.add("$currentPath-end")
-        return "$currentPath-end"
-    } else {
-        this[currentCave]!!.filterNot { visitedSmallCaves.contains(it) }.forEach {
-            return findAllPaths(it, currentPath + "-" + it.id, visitedSmallCaves)
+fun traverse(
+    allowedToVisit: (String, List<String>) -> Boolean,
+    path: List<String> = listOf("start")
+): List<List<String>> =
+    if (path.last() == "end") listOf(path)
+    else caves.getValue(path.last())
+        .filter { allowedToVisit(it, path) }
+        .flatMap {
+            traverse(allowedToVisit, path + it)
         }
+
+fun Input.toCaveMap() = map { it.split("-") }
+    .flatMap {
+        listOf(
+            it.first() to it.last(),
+            it.last() to it.first()
+        )
     }
-    return ""
-}
-
-fun Input.toCaveMap(): CaveMap {
-    val caves: CaveMap = mutableMapOf()
-
-    forEach { line ->
-        val path = line.split("-")
-        val cave1 = Cave(path.first())
-        val cave2 = Cave(path.last())
-
-        val neighbors1 = caves[cave1] ?: emptyArray()
-        caves[cave1] = neighbors1 + cave2
-        val neighbors2 = caves[cave2] ?: emptyArray()
-        caves[cave2] = neighbors2 + cave1
-
-    }
-    return caves
-} 
+    .groupBy({ it.first }, { it.second })
  

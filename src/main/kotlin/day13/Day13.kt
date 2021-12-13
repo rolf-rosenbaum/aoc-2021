@@ -11,10 +11,9 @@ typealias Paper = Set<Point>
 fun main() {
 
     fun part1(input: Input): Int {
-        val paper = input.toPaper().print(h = 7)
-        val folded1 = paper.foldHorizontally(7).print(v = 5)
-        folded1.foldVertically(5).print()
-        return 0
+        val paper = input.toPaper()
+        val folded1 = paper.foldHorizontally(7)
+        return folded1.size
     }
 
     fun part2(input: Input): Int {
@@ -51,22 +50,9 @@ fun main() {
 fun Paper.print(h: Int? = null, v: Int? = null): Paper {
     (minOf { it.y }..maxOf { it.y }).forEach { y ->
         (minOf { it.x }..maxOf { it.x }).forEach { x ->
-            if (h == y) {
-                print("-")
-            } else {
-                if (v == x) {
-                    print("|")
-                } else {
-                    print(
-                        if (this.contains(Point(x, y))) {
-                            "#"
-                        } else {
-                            " "
-                        }
-                    )
-                }
-            }
-
+            if (h == y) print("-") else if (v == x) print("|") else print(
+                if (contains(Point(x, y))) "#" else " "
+            )
         }
         println()
     }
@@ -74,15 +60,13 @@ fun Paper.print(h: Int? = null, v: Int? = null): Paper {
     return this
 }
 
-fun Paper.foldHorizontally(foldLine: Int): Paper = this
-    .map { p ->
-        Point(x = p.x, y = foldLine - abs(p.y - foldLine))
-    }.toSet()
+fun Paper.foldHorizontally(foldLine: Int): Paper = map { p ->
+    Point(x = p.x, y = foldLine - abs(p.y - foldLine))
+}.toSet()
 
-fun Paper.foldVertically(foldLine: Int): Paper = this
-    .map { p ->
-        Point(x = foldLine -abs(p.x - foldLine), y = p.y)
-    }.toSet()
+fun Paper.foldVertically(foldLine: Int): Paper = map { p ->
+    Point(x = foldLine - abs(p.x - foldLine), y = p.y)
+}.toSet()
 
 fun Input.toPaper(): Paper {
     val paper = mutableSetOf<Point>()
