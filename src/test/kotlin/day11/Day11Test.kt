@@ -10,7 +10,7 @@ class Day11Test {
 
     @Test
     fun neighbors() {
-        val field = readInput("day11/test_input").toOctopusField()
+        val field = readInput("day11/test_input").`to Octopus's Garden`()
         assertEquals(3, field.neighborsOf(Octopus(Point(0, 0), 0)).size)
 
         val neighborsOf = field.neighborsOf(Octopus(Point(5, 5), 0))
@@ -32,7 +32,7 @@ class Day11Test {
 
     @Test
     fun `next generation`() {
-        val field = readInput("day11/test_input2").toOctopusField()
+        val field = readInput("day11/test_input2").`to Octopus's Garden`()
         val expexcted = readInput("day11/expectation").joinToString("\n")
 
         val next = field.step()

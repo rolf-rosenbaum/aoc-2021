@@ -19,12 +19,9 @@ fun main() {
     }
 
     fun part2(input: Input): Int {
-        var step = 0
-        generateSequence(input.`to Octopus's Garden`()) {
-            step++
+        return generateSequence(input.`to Octopus's Garden`()) {
             it.step()
-        }.first { it.all { octopus -> octopus.energy % 10 == 0 } }
-        return step
+        }.indexOfFirst { it.all { octopus -> octopus.energy == 0 } }
     }
 
     // test if implementation meets criteria from the description, like:
