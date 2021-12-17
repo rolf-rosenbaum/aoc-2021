@@ -79,7 +79,7 @@ fun Cave.findPath(destination: Point = Point(first().lastIndex, lastIndex), part
             currentCave.pos.neighbors().filter {
                 it.x in (0..destination.x) && it.y in (0..destination.y)
             }.forEach {
-                possiblePath.offer(Path(it, currentCave.totalRisk + if (part1) this.getPart1(it) else getPart2(it)))
+                possiblePath.offer(Path(it, currentCave.totalRisk + if (part1) getPart1(it) else getPart2(it)))
             }
         }
     }
