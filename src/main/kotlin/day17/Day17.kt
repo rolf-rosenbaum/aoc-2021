@@ -37,7 +37,7 @@ fun maxProbeHeight(initialVelocity: Velocity, targetRange: TargetRange): Int? {
     }.takeWhile {
         it.position.x <= targetRange.xRange.last && it.position.y >= targetRange.yRange.last
     }.let { t ->
-        if (t.any { t -> t.inRange(targetRange) }) {
+        if (t.any { t -> t in targetRange }) {
             t.maxOfOrNull { t ->
                 t.position.y 
             }
@@ -55,12 +55,15 @@ fun Trajectory.step(): Trajectory {
         velocity = Velocity(xVelocity, velocity.y - 1)
     )
 }
-fun Trajectory.inRange(range: TargetRange): Boolean {
-    return position.x in range.xRange.fix() && position.y in range.yRange.fix()
-}
 
 fun IntProgression.fix() = if (last < first) last..first else this 
 
-class Trajectory(val position: Point = Point(0, 0), val velocity: Velocity)
+class Trajectory(val position: Point = Point(0, 0), val velocity: Velocity) {}
 data class Velocity(val x: Int, val y: Int)
-class TargetRange(val xRange: IntProgression, val yRange: IntProgression) 
+
+class TargetRange(val xRange: IntProgression, val yRange: IntProgression) {
+    operator fun contains(t: Trajectory): Boolean {
+        return t.position.x in xRange.fix() && t.position.y in yRange.fix()
+    }
+
+}
