@@ -26,15 +26,10 @@ fun main() {
     println(part2(input))
 }
 
-fun List<Region>.solve() = fold<Region, MutableList<Region>>(mutableListOf()) { acc, region ->
-    val toAdd = mutableListOf<Region>()
-    if (region.on) toAdd.add(region)
-    acc.forEach { d ->
-        d.intersect(region, !d.on)?.let<Region, Unit> {
-            toAdd.add(it)
-        }
-    }
-    (acc + toAdd).toMutableList()
+fun List<Region>.solve() = fold<Region, MutableList<Region>>(mutableListOf()) { done, region ->
+    (done + done.fold(if (region.on) mutableListOf(region) else mutableListOf()) { d, r ->
+        (d + r.intersect(region, !r.on)).filterNotNull().toMutableList()
+    }).toMutableList()
 }.sumOf { it.volume() }
 
 
