@@ -56,7 +56,7 @@ fun Trajectory.step(): Trajectory {
     )
 }
 
-fun IntProgression.fix() = if (last < first) last..first else this 
+private fun IntProgression.fix() = if (last < first) last..first else this 
 
 class Trajectory(val position: Point = Point(0, 0), val velocity: Velocity) {}
 data class Velocity(val x: Int, val y: Int)
