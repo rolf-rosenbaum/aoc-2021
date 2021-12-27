@@ -43,32 +43,23 @@ data class SFN(
 }
 
 // [[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
-fun String.toSFN(num: SFN? = null): SFN {
-    
-    println(this)
-    if (1 == length) {
-        println(num)
-        return num!!
-    } 
-    val c = this.first()
-    if (c == '[') {
-        val number = SFN()
-        return number.copy(left = substring(1).toSFN(number))
+fun String.toSFN(): SFN {
+    var sfn: SFN? = null
+    forEachIndexed { index, c ->
+        if (c == '[') {
+            sfn = SFN()
+        } else if (c.isDigit()) {
+            if (this[index + 1] == ',') {
+                sfn = sfn!!.copy(leftVal = c.digitToInt())
+            } else if (this[index + 1] == '[') {
+                sfn = sfn!!.copy(right = SFN(), left = substring(index+1).toSFN())
+            } else {
+                sfn = sfn!!.copy(rightVal = c.digitToInt())
+            }
+        } 
+
     }
-    if (c == ']') {
-        return num!!
-    }
-    if (c == ',') {
-        return num!!.copy(right = substring(1).toSFN(num))
-    }
-    if (c.isDigit()) {
-        if(this[1] == ',') {
-            return substring(1).toSFN(num!!.copy(leftVal = c.digitToInt()))
-        } else 
-        if(this[1] == ']') {
-            return substring(1).toSFN(num!!.copy(rightVal = c.digitToInt()))
-        }
-    }
-    
+    return sfn!!
+
     error("we should not end up here")
 }

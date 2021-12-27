@@ -18,14 +18,20 @@ class Day18Test {
     }
 
     @Test
-    fun `parse SFN`() {
+    fun `parse  only atomic SFN`() {
         val sfn = "[1,2]".toSFN()
         Assertions.assertEquals("[1,2]", sfn.toString())
-
-        val sfn2 = "[3,[1,2]]".toSFN()
-        Assertions.assertEquals("[1,2]", sfn2.toString())
-
-        val sfn3 = "[[1,2],[3,4]]".toSFN(SFN())
-        Assertions.assertEquals("[[1,2],[3,4]]", sfn3.toString())
+//
+//        val sfn2 = "[3,[1,2]]".toSFN()
+//        Assertions.assertEquals("[1,2]", sfn2.toString())
+//
+//        val sfn3 = "[[1,2],[3,4]]".toSFN(SFN())
+//        Assertions.assertEquals("[[1,2],[3,4]]", sfn3.toString())
+    }
+    
+    @Test
+    fun `parse SFN`() {
+        val sfn = "[3,[1,2]]".toSFN()
+        Assertions.assertEquals("[3,[1,2]]", sfn.toString())
     }
 }
