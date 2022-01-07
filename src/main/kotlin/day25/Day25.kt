@@ -5,7 +5,6 @@ import Point
 import day25.Cucumber.EAST
 import day25.Cucumber.SOUTH
 import readInput
-import javax.swing.text.html.HTML.Tag.P
 
 typealias Field = Map<Point, Cucumber>
 

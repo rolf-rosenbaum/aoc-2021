@@ -26,12 +26,33 @@ fun main() {
     println(part2(input))
 }
 
-fun List<Region>.solve() = fold<Region, MutableList<Region>>(mutableListOf()) { done, region ->
-    (done + done.fold(if (region.on) mutableListOf(region) else mutableListOf()) { d, r ->
-        (d + r.intersect(region, !r.on)).filterNotNull().toMutableList()
-    }).toMutableList()
-}.sumOf { it.volume() }
+fun List<Region>.solve() =
+    fold<Region, MutableList<Region>>(mutableListOf()) { done, region ->
+        (done + done.fold(if (region.on) mutableListOf(region) else emptyList()) { d, r ->
+            (d + r.intersect(region, !r.on)).filterNotNull().toMutableList()
+        }
+                ).toMutableList()
+    }.sumOf { it.volume() }
 
+data class Region(val on: Boolean, val x1: Int, val x2: Int, val y1: Int, val y2: Int, val z1: Int, val z2: Int) {
+    fun volume() = (x2 - x1 + 1L) * (y2 - y1 + 1L) * (z2 - z1 + 1L) * (if (!on) -1 else 1)
+
+    fun intersect(other: Region, on: Boolean): Region? {
+        return if (!intersects(other)) null
+        else Region(
+            on,
+            max(x1, other.x1),
+            min(x2, other.x2),
+            max(y1, other.y1),
+            min(y2, other.y2),
+            max(z1, other.z1),
+            min(z2, other.z2)
+        )
+    }
+
+    private fun intersects(region: Region) =
+        x1 <= region.x2 && x2 >= region.x1 && y1 <= region.y2 && y2 >= region.y1 && z1 <= region.z2 && z2 >= region.z1
+}
 
 fun Input.toRegions(): List<Region> = map {
     var on = false
@@ -61,13 +82,5 @@ fun Input.toRegions(): List<Region> = map {
     Region(on, xRange.first, xRange.last, yRange.first, yRange.last, zRange.first, zRange.last)
 }
 
-data class Region(val on: Boolean, val x1: Int, val x2: Int, val y1: Int, val y2: Int, val z1: Int, val z2: Int) {
-    fun volume() = (x2 - x1 + 1L) * (y2 - y1 + 1L) * (z2 - z1 + 1L) * (if (!on) -1 else 1)
-
-    fun intersect(c: Region, on: Boolean): Region? {
-        return if (x1 > c.x2 || x2 < c.x1 || y1 > c.y2 || y2 < c.y1 || z1 > c.z2 || z2 < c.z1) null
-        else Region(on, max(x1, c.x1), min(x2, c.x2), max(y1, c.y1), min(y2, c.y2), max(z1, c.z1), min(z2, c.z2))
-    }
-}
 
 fun IntRange.fix() = if (last < first) last..first else this
