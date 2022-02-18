@@ -8,6 +8,11 @@ fun main() {
     fun part1(input: Input): Int {
 
         val bits = input.toBits()
+        
+        val version = bits.substring(0,2).toInt(2)
+        val type = bits.substring(3,5).toInt(2)
+        
+        
         return bits.toInt()
     }
 
