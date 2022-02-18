@@ -3,7 +3,6 @@ package `2016`
 import readInput
 import kotlin.math.abs
 
-
 fun main() {
 
     fun part1(input: List<String>): Int {
