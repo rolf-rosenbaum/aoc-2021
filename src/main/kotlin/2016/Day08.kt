@@ -19,29 +19,29 @@ fun main() {
                     display.rect(x, y)
                 }
                 it.contains("row") -> {
-                    val by = it.split(" ").last().toInt()
+                    val xShift = it.split(" ").last().toInt()
                     val y = it.split("=").last().split(" ").first().toInt()
-                    display.rotateRow(y = y, shift = by)
+                    display.rotateRow(y = y, shift = xShift)
                 }
                 it.contains("column") -> {
-                    val by = it.split(" ").last().toInt()
+                    val yShift = it.split(" ").last().toInt()
                     val x = it.split("=").last().split(" ").first().toInt()
-                    display.rotateColumn(x = x, shift = by)
+                    display.rotateColumn(x = x, shift = yShift)
                 }
             }
         }
 
+        return display.size
+
+    }
+
+    fun part2(input: List<String>): Int {
         (0 until DISPLAY_HEIGHT).forEach { y ->
             (0 until DISPLAY_WIDTH).forEach { x ->
                 if (display.contains(Point(x, y))) print("#") else print(" ")
             }
             println()
         }
-        return display.size
-
-    }
-
-    fun part2(input: List<String>): Int {
         return 0
     }
 
@@ -80,7 +80,8 @@ fun Display.rotateRow(y: Int, shift: Int) {
 fun Display.rotateColumn(x: Int, shift: Int) {
     val newRow = mutableSetOf<Point>()
     (0 until DISPLAY_HEIGHT).forEach { y ->
-        val point = Point(x, y)if (contains(point)) {
+        val point = Point(x, y)
+        if (contains(point)) {
             remove(point)
             newRow.add(Point(x, (y + shift) % DISPLAY_HEIGHT))
         }
