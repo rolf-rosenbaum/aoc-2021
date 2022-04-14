@@ -4,14 +4,7 @@ package `2016`
 val magicNumber = 1352
 //val goal = Point(31, 39)
 
-fun part1(): Int {
-
-
-    val path = findPath()
-
-
-    return path
-}
+fun part1(): Int = findPath()
 
 fun part2(): Int {
     val maze: MutableMap<Pair<Int, Int>, Int> = mutableMapOf()
@@ -20,32 +13,29 @@ fun part2(): Int {
     maze[1 to 1] = 0
 
     do  {
-        maze.filterValues { it == distance }.forEach { (x, y), _ ->
-            neighbors(x, y).forEach { (x1, y1) ->
-                if (maze[x1 to y1] == null) {
-                    maze[x1 to y1] = distance + 1
-                }
-            }
-        }
-//        prettyPrint(maze)
-        distance++
+        distance = floodMaze(maze, distance)
     } while (distance < 50)
 
     return maze.size
 }
 
+private fun floodMaze(maze: MutableMap<Pair<Int, Int>, Int>, distance: Int): Int {
+    maze.filterValues { it == distance }.forEach { (x, y), _ ->
+        neighbors(x, y).forEach { (x1, y1) ->
+            if (maze[x1 to y1] == null) {
+                maze[x1 to y1] = distance + 1
+            }
+        }
+    }
+    return distance + 1
+}
+
 fun main() {
-
-
     println(part1())
     println(part2())
 }
 
-
-fun isWall(x: Int, y: Int): Boolean {
-    val num = (x * x + 3 * x +  2 * x * y+y+y * y+magicNumber).toString(2)
-    return num.count { it == '1' } % 2 == 1
-}
+fun isWall(x: Int, y: Int): Boolean = (x * x + 3 * x + 2 * x * y + y + y * y + magicNumber).toString(2).count { it == '1' } % 2 == 1
 
 fun isOutside(x: Int, y: Int): Boolean {
     return x < 0 || y < 0
@@ -78,15 +68,7 @@ fun findPath(): Int {
     maze[1 to 1] = 0
 
     while (maze[31 to 39] == null) {
-        maze.filterValues { it == distance }.forEach { (x, y), _ ->
-            neighbors(x, y).forEach { (x1, y1) ->
-                if (maze[x1 to y1] == null) {
-                    maze[x1 to y1] = distance + 1
-                }
-            }
-        }
-//        prettyPrint(maze)
-        distance++
+        distance = floodMaze(maze, distance)
     }
     return maze[31 to 39] ?: 0
 }
